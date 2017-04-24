@@ -51,6 +51,30 @@ class DPProblems
   # to include are items 0 and 1, whose values are 10 and 4 respectively.  Duplicates are not allowed -- that is, you
   # can only include a particular item once.
   def knapsack(weights, values, capacity)
+    return 0 if capacity == 0 || weights.length == 0
+    table = knapsack_table(weights, values, capacity)
+    table[capacity][weights.length - 1]
+  end
+
+  def knapsack_table(weights, values, capacity)
+    table = []
+    (0..capacity).each do |i|
+      table[i] = []
+      (0..weights.length - 1).each do |j|
+        if i == 0
+          table[i][j] = 0
+        elsif j == 0
+          table[i][j] = weights[0] > i ? 0 : values[0]
+        else
+          option1 = table[i][j - 1]
+          option2 = i < weights[j] ? 0 : table[i - weights[j]][j - 1] + values[j]
+          optimum = [option1, option2].max
+          table[i][j] = optimum
+        end
+      end
+    end
+
+    table
   end
 
   # Stair Climber: a frog climbs a set of stairs.  It can jump 1 step, 2 steps, or 3 steps at a time.
@@ -59,12 +83,32 @@ class DPProblems
   # NB: this is similar to, but not the same as, make_change.  Try implementing this using the opposite
   # DP technique that you used in make_change -- bottom up if you used top down and vice versa.
   def stair_climb(n)
+    jumps = [[[]], [[1]], [[1, 1], [2]]]
+
+    return jumps[n] if n < 3
+
+    (3..n).each do |i|
+      new_jump_set = []
+      (1..3).each do |first_step|
+        jumps[i - first_step].each do |way|
+          new_path = [first_step]
+          way.each do |step|
+            new_path << step
+          end
+          new_jump_set << new_path
+        end
+      end
+      jumps << new_jump_set
+    end
+
+    jumps.last
   end
 
   # String Distance: given two strings, str1 and str2, calculate the minimum number of operations to change str1 into
   # str2.  Allowed operations are deleting a character ("abc" -> "ac", e.g.), inserting a character ("abc" -> "abac", e.g.),
   # and changing a single character into another ("abc" -> "abz", e.g.).
   def str_distance(str1, str2)
+
   end
 
   # Maze Traversal: write a function that takes in a maze (represented as a 2D matrix) and a starting
