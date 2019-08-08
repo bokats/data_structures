@@ -22,7 +22,6 @@ class HashMap
       @store[bucket(key)].append(key, val)
       @count += 1
     end
-
   end
 
   def get(key)

@@ -35,3 +35,5 @@ class QuickSort
     divider - 1
   end
 end
+
+puts QuickSort.sort2!([10,9,8,7], 0, 4)
